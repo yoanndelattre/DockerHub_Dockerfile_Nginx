@@ -1,14 +1,10 @@
 FROM yoanndelattre/base:base-debian
-MAINTAINER Yoann Delattre "github.com/yoanndelattre | twitter.com/yoanndelattre_"
-RUN apt-get update && apt-get upgrade -y
-
-#       <--install nginx-->
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y nginx
-
-#     <--clean installation-->
-RUN apt-get -qy clean && \
+LABEL MAINTAINER='Yoann Delattre "github.com/yoanndelattre | twitter.com/yoanndelattre_"'
+RUN apt-get update && apt-get upgrade -y && \
+      apt-get install -y nginx && \
+      apt-get -qy clean && \
       rm -rf /var/lib/apt/lists/*
-
 VOLUME [ "/var/www/html" ]
+WORKDIR /var/www/html
 EXPOSE 80
-CMD nginx -g "daemon off;"
+CMD nginx -v && echo "Website is viewable at: http://localhost:80"; exec nginx -g 'daemon off;'
